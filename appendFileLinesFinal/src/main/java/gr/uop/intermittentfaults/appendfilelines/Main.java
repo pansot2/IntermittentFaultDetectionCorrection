@@ -40,6 +40,7 @@ public class Main {
             String filePath = fs.getFilePath();
             File file = new File(filePath);
             AddImport.addLines(file, "import org.jboss.metrics.javase.automatedmetricsjavaseapi.JbossAutomatedJavaSeMetricsDbStore;");
+            AddImport.addLines(file, "import org.jboss.metrics.javase.automatedmetricsjavaseapi.CodeParamsApi;");
             for(ClassStructure cs : fs.getClasses()) {
                 String className = cs.getClassName();
                 for(MethodStructure ms : cs.getMethods()) {

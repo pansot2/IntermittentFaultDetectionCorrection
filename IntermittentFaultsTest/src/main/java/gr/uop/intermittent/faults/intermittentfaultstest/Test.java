@@ -23,6 +23,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.jboss.metrics.javase.automatedmetricsjavaseapi.CodeParamsApi;
 import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsCacheApi;
 import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsPropertiesApi;
@@ -112,8 +113,10 @@ public class Test {
             dbStmt.put("statement_1", stmt);
             metricProperties2.setDatabaseStatement(dbStmt);
             HashMap<String,String> query1 = new HashMap<String,String>();
-            query1.put("StoreDBMetric", "INSERT INTO mymetrics.metricvalues(CLASS_NAME,METHOD_NAME,CLASS_PATH,LINE,THREAD_NAME,RECORD_TIME) VALUES('[1]','[2]','[3]','[4]','[5]','{time}');");
+            query1.put("StoreDBMetric", "INSERT INTO mymetrics.metricvalues(SERIAL_COUNT,CLASS_NAME,METHOD_NAME,CLASS_PATH,LINE,THREAD_NAME,RECORD_TIME) VALUES('[1]','[2]','[3]','[4]','[5]','[6]','{time}');");
             metricProperties2.setUpdateDbQueries(query1);
+            CodeParamsApi.addUserName("intermittentFaults");
+            CodeParamsApi.getCodeParams("intermittentFaults").getAtomicIntegerCodeParams().put("serialCount", new AtomicInteger(0));
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -140,7 +143,7 @@ CodeParamsApi.addUserName("default");
                 stmt.executeUpdate(sql);
                 System.out.println("Database created successfully...");
 
-                sql = "CREATE TABLE mymetrics.metricvalues(ID int NOT NULL AUTO_INCREMENT, CLASS_NAME varchar(255) NOT NULL," +
+                sql = "CREATE TABLE mymetrics.metricvalues(ID int NOT NULL AUTO_INCREMENT,SERIAL_COUNT varchar(255) NOT NULL, CLASS_NAME varchar(255) NOT NULL," +
                       " METHOD_NAME varchar(255) NOT NULL, CLASS_PATH varchar(255) NOT NULL, LINE varchar(255) NOT NULL, THREAD_NAME varchar(255) NOT NULL, RECORD_TIME DATETIME, "
                         + "PRIMARY KEY(ID));"; 
                 
