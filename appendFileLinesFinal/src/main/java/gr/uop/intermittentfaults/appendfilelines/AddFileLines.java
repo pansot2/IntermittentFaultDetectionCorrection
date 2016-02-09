@@ -21,7 +21,7 @@ public class AddFileLines {
         int i=0;
         for (int line : additionalLines)
             if (lines.get(line-1).length()!=0 && !lines.get(line-1).contains("return") && !lines.get(line-1).contains("if") && !lines.get(line-1).contains("*/"))
-                lines.set(line-1, lines.get(line-1) + " try {JbossAutomatedJavaSeMetricsDbStore.metricsDbStore(\"\", new Object[]{CodeParamsApi.getCodeParams(\"intermittentFaults\").getAtomicIntegerCodeParam(\"serialCount\").incrementAndGet(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\");} catch (Exception ex) {ex.printStackTrace();}");
+                lines.set(line-1, lines.get(line-1) + " try {JbossAutomatedJavaSeMetricsSyncDbStore.metricsDbStore(\"\", new Object[]{GlobalParams.globalCountGetAndIncrement(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\");} catch (Exception ex) {ex.printStackTrace();}");
         Files.write(file.toPath(), lines);
     }
 }

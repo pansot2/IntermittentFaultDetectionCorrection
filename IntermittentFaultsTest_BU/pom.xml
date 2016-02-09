@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.jboss.metrics</groupId>
             <artifactId>automated-metrics-javase-api</artifactId>
-            <version>1.0.4.Final-SNAPSHOT</version>
+            <version>1.0.3.Final</version>
             <type>jar</type>
         </dependency>
         <dependency>
