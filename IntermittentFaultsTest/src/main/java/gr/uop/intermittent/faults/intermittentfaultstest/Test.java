@@ -23,8 +23,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.jboss.metrics.javase.automatedmetricsjavaseapi.CodeParamsApi;
 import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsCacheApi;
 import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsPropertiesApi;
 import org.jboss.metrics.jbossautomatedmetricslibrary.MetricsCache;
@@ -44,7 +42,7 @@ public class Test {
      */
     
     public static void main(String[] args) {
-        try {
+    /*    try {
             initializeMetricProperties();
             TestClass mTC = new TestClass();
             TestThreads mTreads =  new TestThreads("1",mTC);
@@ -66,7 +64,7 @@ public class Test {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
     
     
@@ -85,8 +83,8 @@ public class Test {
             
             while (mTreads.getT().isAlive() || mTreads2.getT().isAlive() || mTreads3.getT().isAlive());
             
-        //    if (MetricsCacheCollection.getMetricsCacheCollection().getMetricsCacheInstance(groupName2)!=null)
-        //        System.out.println(MetricsCacheApi.printMetricsCache(groupName2));
+            if (CacheCollection.getCacheCollection().getCacheInstance(groupName2)!=null)
+                System.out.println(CacheApi.printCache(groupName2));
             
          //   if (MetricsCacheCollection.getMetricsCacheCollection().getMetricsCacheInstance(groupName)!=null)
          //       System.out.println(MetricsCacheApi.printMetricsCache(groupName));
@@ -113,14 +111,11 @@ public class Test {
             dbStmt.put("statement_1", stmt);
             metricProperties2.setDatabaseStatement(dbStmt);
             HashMap<String,String> query1 = new HashMap<String,String>();
-            query1.put("StoreDBMetric", "INSERT INTO mymetrics.metricvalues(SERIAL_COUNT,CLASS_NAME,METHOD_NAME,CLASS_PATH,LINE,THREAD_NAME,RECORD_TIME) VALUES('[1]','[2]','[3]','[4]','[5]','[6]','{time}');");
+            query1.put("StoreDBMetric", "INSERT INTO mymetrics.metricvalues(SERIAL_COUNT,CLASS_NAME,METHOD_NAME,CLASS_PATH,LINE,THREAD_NAME,RECORD_TIME) VALUES([1],'[2]','[3]','[4]','[5]','[6]','{time}');");
             metricProperties2.setUpdateDbQueries(query1);
-            CodeParamsApi.addUserName("intermittentFaults");
-            CodeParamsApi.getCodeParams("intermittentFaults").getAtomicIntegerCodeParams().put("serialCount", new AtomicInteger(0));
         } catch(Exception e) {
             e.printStackTrace();
         }
-CodeParamsApi.addUserName("default");
         MetricsPropertiesApi.storeProperties(groupName, metricProperties2);
     }
     
@@ -143,7 +138,7 @@ CodeParamsApi.addUserName("default");
                 stmt.executeUpdate(sql);
                 System.out.println("Database created successfully...");
 
-                sql = "CREATE TABLE mymetrics.metricvalues(ID int NOT NULL AUTO_INCREMENT,SERIAL_COUNT varchar(255) NOT NULL, CLASS_NAME varchar(255) NOT NULL," +
+                sql = "CREATE TABLE mymetrics.metricvalues(ID int NOT NULL AUTO_INCREMENT,SERIAL_COUNT int(20) NOT NULL, CLASS_NAME varchar(255) NOT NULL," +
                       " METHOD_NAME varchar(255) NOT NULL, CLASS_PATH varchar(255) NOT NULL, LINE varchar(255) NOT NULL, THREAD_NAME varchar(255) NOT NULL, RECORD_TIME DATETIME, "
                         + "PRIMARY KEY(ID));"; 
                 
