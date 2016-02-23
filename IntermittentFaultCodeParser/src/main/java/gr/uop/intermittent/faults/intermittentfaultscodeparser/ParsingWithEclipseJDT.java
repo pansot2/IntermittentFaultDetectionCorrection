@@ -52,6 +52,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 public class ParsingWithEclipseJDT {
 
     public static ArrayList<FileStructure> myFS = null;
+    private static int firstMethodLine;
 
      public static void parseForMethods(String str, final ClassStructure cs, final FileStructure fStr) {
         ASTParser parser = ASTParser.newParser(AST.JLS3);
@@ -92,8 +93,9 @@ public class ParsingWithEclipseJDT {
                         Info info = new Info();
                         info.setClassName(cs.getClassName());
                         info.setFile(cs.getParent().getFileName());
-                        int methodLines = ParsingWithEclipseJDT.countMethodLines(cs.getParent().getFilePath(), cu.getLineNumber(node.getStartPosition()));
-                        info.setLine(cu.getLineNumber(node.getStartPosition()));
+                        firstMethodLine = cu.getLineNumber(node.getStartPosition());
+                        int methodLines = ParsingWithEclipseJDT.countMethodLines(cs.getParent().getFilePath());
+                        info.setLine(firstMethodLine);
                         info.setStructureLength(methodLines);
                         fStr.addInfoInLineDictionary(cu.getLineNumber(node .getStartPosition()), info);
                         ms.addMethodInfo(info);
@@ -454,7 +456,7 @@ public class ParsingWithEclipseJDT {
             return count;
     }
     
-    public static int countMethodLines(String filePath, int firstMethodLine) throws IOException {
+    public static int countMethodLines(String filePath) throws IOException {
         int linesNum = 0;
         int charsCount_1 = 0;
         int charsCount_2 = 0;
@@ -463,11 +465,14 @@ public class ParsingWithEclipseJDT {
         List<String> lines = Files.readAllLines(file.toPath());
         int line = firstMethodLine;
         
-        while (charsCount_1!=charsCount_2 || charsCount_1==0 | charsCount_2==0) {
+        while (charsCount_1!=charsCount_2 || charsCount_1==0 || charsCount_2==0) {
             charsCount_1 = countCharPosition(lines.get(line-1), '{', charsCount_1);
             charsCount_2 = countCharPosition(lines.get(line-1), '}', charsCount_2);
             line++;
-            linesNum++;
+            if(charsCount_1==0)
+                firstMethodLine++;
+            else
+                linesNum++;
         }
         
         return linesNum;

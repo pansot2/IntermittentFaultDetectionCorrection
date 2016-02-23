@@ -36,11 +36,14 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         insertFilesManually();
         
+         // Add lines in the code for Record Phase
         for(FileStructure  fs : myFS) {
             String filePath = fs.getFilePath();
+            System.out.println("FilePath : " + filePath);
             File file = new File(filePath);
             AddImport.addLines(file, "import org.jboss.metrics.javase.automatedmetricsjavaseapi.JbossAutomatedJavaSeMetricsSyncDbStore;");
             AddImport.addLines(file, "import gr.uop.intermittentfaults.intermmittentfaultsutils.GlobalParams;");
+            
             for(ClassStructure cs : fs.getClasses()) {
                 String className = cs.getClassName();
                 for(MethodStructure ms : cs.getMethods()) {
@@ -52,6 +55,7 @@ public class Main {
                     for(int i=line+1; i<line+methodLength-1; i++){
                         additionalLines.add(i);
                     }
+                    
                     AddFileLines.addLines(file, additionalLines, className, methodName, filePath);
                 }
             }
@@ -60,13 +64,54 @@ public class Main {
         Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runCompile.bat");
         Thread.sleep(10000);
         
-        MetricsCache cache = Test.test(args);
-        if (cache!=null) {
-                System.out.println("Cache : " );
-                cache.printMetricObjects();
-            }
+      //  MetricsCache cache = Test.test(args);
+     //   if (cache!=null) {
+     //           System.out.println("Cache : " );
+    //            cache.printMetricObjects();
+     //       }
        
-        Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
+    //    Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
+
+         // Add lines in the code for Replay Phase
+        for(FileStructure  fs : myFS) {
+            String filePath = fs.getFilePath();
+            System.out.println("FilePath : " + filePath);
+            File file = new File(filePath);
+            AddImport.addLines(file, "import org.jboss.metrics.javase.automatedmetricsjavaseapi.JbossAutomatedJavaSeMetricsSyncDbStore;");
+            AddImport.addLines(file, "import gr.uop.intermittentfaults.intermmittentfaultsutils.GlobalParams;");
+            
+            for(ClassStructure cs : fs.getClasses()) {
+                String className = cs.getClassName();
+                for(MethodStructure ms : cs.getMethods()) {
+                    String methodName = ms.getMethodName();
+                    Info info = ms.getMethodInfo().get(0);
+                    int line = info.getLine();
+                    int methodLength = info.getStructureLength();
+                    List<Integer> additionalLines = new ArrayList<>();
+                    for(int i=line+1; i<line+methodLength-1; i++){
+                        additionalLines.add(i);
+                    }
+                    List<Integer> additionalLinesForReplay = new ArrayList<>();
+                    
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("TestThreads")==0) {
+                        additionalLinesForReplay.add(35);
+                    }
+                    
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("run")==0) {
+                        additionalLinesForReplay.add(41);
+                    }
+                    
+                    AddFileLinesForReplay.addLines(file, additionalLines, additionalLinesForReplay, className, methodName, filePath);
+                }
+            }
+        }
+        
+        Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runCompile.bat");
+        Thread.sleep(10000);
+        
+      //  MetricsCache cache = Test.replay(args);
+        
+        //    Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
 
         /*
         Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runCompile.bat");
