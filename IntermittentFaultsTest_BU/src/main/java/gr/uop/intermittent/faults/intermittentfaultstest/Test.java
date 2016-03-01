@@ -111,9 +111,6 @@ public class Test {
             TestThreads mTreads3 =  new TestThreads("3",mTC);
             mTreads3.start();
             
-            ControlThread cThread = new ControlThread();
-            cThread.start();
-            
             while (mTreads.getT().isAlive() || mTreads2.getT().isAlive() || mTreads3.getT().isAlive());
             
             if (CacheCollection.getCacheCollection().getCacheInstance(groupName2)!=null)
@@ -177,7 +174,17 @@ public class Test {
     
     private static void createDbTable(Statement stmt, String table) {
         try {
-            String query = "DROP DATABASE mymetrics;";
+            String sql;
+            
+            try {
+                sql = "CREATE DATABASE MyMETRICS";
+                stmt.executeUpdate(sql);
+                System.out.println("Database created successfully...");
+            } catch (Exception ex) {
+                System.out.println("Database already exists ...");
+            }
+            
+            String query = "DROP TABLE mymetrics." + table + ";";
             
             try {
                 stmt.executeUpdate(query);      
@@ -190,9 +197,6 @@ public class Test {
             boolean exists = rs.getInt("COUNT(*)") > 0;
             
             if (!exists) {
-                String sql = "CREATE DATABASE MyMETRICS";
-                stmt.executeUpdate(sql);
-                System.out.println("Database created successfully...");
 
                 sql = "CREATE TABLE mymetrics." + table + "(ID int NOT NULL AUTO_INCREMENT,SERIAL_COUNT int(20) NOT NULL, CLASS_NAME varchar(255) NOT NULL," +
                       " METHOD_NAME varchar(255) NOT NULL, CLASS_PATH varchar(255) NOT NULL, LINE varchar(255) NOT NULL, THREAD_NAME varchar(255) NOT NULL, RECORD_TIME DATETIME, "

@@ -9,13 +9,13 @@ import static gr.uop.intermittent.faults.intermittentfaultscodeparser.ParsingWit
 import static gr.uop.intermittent.faults.intermittentfaultscodeparser.ParsingWithEclipseJDT.parseForMethods;
 import static gr.uop.intermittent.faults.intermittentfaultscodeparser.ParsingWithEclipseJDT.readFileToString;
 import gr.uop.intermittent.faults.intermittentfaultstest.Test;
-import static gr.uop.intermittentfaults.appendfilelines.Main2.codeDirectory;
 import gr.uop.intermittentfaults.codestructure.ClassStructure;
 import gr.uop.intermittentfaults.codestructure.FileStructure;
 import gr.uop.intermittentfaults.codestructure.FilesToParse;
 import gr.uop.intermittentfaults.codestructure.Info;
 import gr.uop.intermittentfaults.codestructure.MethodStructure;
 import gr.uop.intermittentfaults.codestructure.Utils;
+import gr.uop.intermittentfaults.intermmittentfaultsutils.ControlThread;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import org.jboss.metrics.jbossautomatedmetricslibrary.MetricsCache;
  *
  * @author Panos
  */
-public class Main {
+public class Main2 {
     
     static ArrayList<FileStructure> myFS = null;
     
@@ -37,7 +37,7 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         insertFilesManually();
         
-         // Add lines in the code for Record Phase
+        // Add lines in the code for Replay Phase
         for(FileStructure  fs : myFS) {
             String filePath = fs.getFilePath();
             System.out.println("FilePath : " + filePath);
@@ -56,35 +56,61 @@ public class Main {
                     for(int i=line+1; i<line+methodLength-1; i++){
                         additionalLines.add(i);
                     }
+                    List<Integer> additionalLinesForReplay = new ArrayList<>();
                     
-                    AddFileLines.addLines(file, additionalLines, className, methodName, filePath);
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("TestThreads")==0) {
+                        additionalLinesForReplay.add(107);
+                    }
+                    
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("run")==0) {
+                        additionalLinesForReplay.add(41);
+                    }
+                    
+                    AddFileLinesForReplay.addLines(file, additionalLines, additionalLinesForReplay, className, methodName, filePath);
                 }
             }
         }
-
+        
+        ControlThread cThread = new ControlThread();
+        cThread.start();
+            
         Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runCompile.bat");
         Thread.sleep(10000);
-           MetricsCache cache = Test.test(args);
-     //   if (cache!=null) {
-     //           System.out.println("Cache : " );
-    //            cache.printMetricObjects();
-     //       }
-       
+        MetricsCache cache = Test.replay(args);
+        
+     //   Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
+      //  cache = Test.replay(args);
+        
         Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
 
+        /*
+        Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runCompile.bat");
+        Thread.sleep(10000);
+         
+        for (int i=0; i<10; i++) {
+            MetricsCache cache = Test.test(args);
+
+            if (cache!=null) {
+                System.out.println("Cache : " );
+                cache.printMetricObjects();
+            }
+        }
+        
+        Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
+          */      
     }
     
     public static void insertFilesManually() throws IOException{
         FilesToParse ftp = new FilesToParse();
         
-    /*    FileStructure fs2 = new FileStructure();
+        FileStructure fs2 = new FileStructure();
         fs2.setFilePath(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java");
         fs2.setFileName("Store.java");
         ClassStructure cs2 = new ClassStructure();
         cs2.setClassName("Store");
         fs2.addClassStructure(cs2);
         ftp.addFileStructure(fs2);
-        */
+        
         FileStructure fs3 = new FileStructure();
         fs3.setFilePath(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\utils\\Store.java");
         fs3.setFileName("Store.java");

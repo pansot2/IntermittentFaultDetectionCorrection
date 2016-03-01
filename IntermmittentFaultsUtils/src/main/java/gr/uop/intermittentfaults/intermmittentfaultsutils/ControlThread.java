@@ -5,7 +5,11 @@
  */
 package gr.uop.intermittentfaults.intermmittentfaultsutils;
 
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -13,28 +17,51 @@ import java.util.ArrayList;
  */
 public class ControlThread extends Thread {
     Thread t;
-    ArrayList<Object[]> records = new ArrayList();
+    ResultSet rs;
+    int count;
+    
+    public ControlThread() {
+        try {
+            Connection  connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306", "root", "root");
+            Statement stmt = connection.createStatement();
+            String query = "SELECT COUNT(*) from mymetrics.metricvalues;";
+            rs = stmt.executeQuery(query);
+            rs.next();
+            count = rs.getInt(1);
+            if (count > 0) {
+                query = "SELECT * from mymetrics.metricvalues order by SERIAL_COUNT;";
+                rs = stmt.executeQuery(query);
+                 System.out.println("query = " + query);
+            } else 
+                rs = null;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
     
     public void run() {
         try {
-            int recordSize = records.size();
+            int recordSize = count;
             int i = 0;
             
             while (i<recordSize) {
-                if (GlobalParams.allThreads3Done()) {
-                    if(records.get(i)[0].toString().compareTo("main")==0) {
+                if (GlobalParams.allThreadsDone()) {
+                    rs.next();
+                    System.out.println("i = " + i);
+                    String threadName = rs.getString("THREAD_NAME");
+                    if(threadName.compareTo("main")==0) {
                         GlobalParams.setMainThreadDone(false);
                         GlobalParams.getMutexThreadMain().release();
                         i++;
-                    } else if (records.get(i)[0].toString().compareTo("thread1")==0) {
+                    } else if (threadName.compareTo("1")==0) {
                         GlobalParams.setThread1Done(false);
                         GlobalParams.getMutexThread1().release();
                         i++;
-                    } else if (records.get(i)[0].toString().compareTo("thread2")==0) {
+                    } else if (threadName.compareTo("2")==0) {
                         GlobalParams.setThread2Done(false);
                         GlobalParams.getMutexThread2().release();
                         i++;
-                    } else if (records.get(i)[0].toString().compareTo("thread3")==0) {
+                    } else if (threadName.compareTo("3")==0) {
                         GlobalParams.setThread3Done(false);
                         GlobalParams.getMutexThread3().release();
                         i++;
