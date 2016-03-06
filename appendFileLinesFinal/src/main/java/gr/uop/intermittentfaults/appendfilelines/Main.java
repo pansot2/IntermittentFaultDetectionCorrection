@@ -57,7 +57,16 @@ public class Main {
                         additionalLines.add(i);
                     }
                     
-                    AddFileLines.addLines(file, additionalLines, className, methodName, filePath);
+                    List<Integer> excludeLines = new ArrayList<>();
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("test")==0) {
+                        excludeLines.add(86);
+                    }
+                    
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("getT")==0) {
+                        excludeLines.add(68);
+                    }
+                    
+                    AddFileLines.addLines(file, additionalLines, excludeLines, className, methodName, filePath);
                 }
             }
         }
@@ -77,14 +86,14 @@ public class Main {
     public static void insertFilesManually() throws IOException{
         FilesToParse ftp = new FilesToParse();
         
-    /*    FileStructure fs2 = new FileStructure();
+        FileStructure fs2 = new FileStructure();
         fs2.setFilePath(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java");
-        fs2.setFileName("Store.java");
+        fs2.setFileName("Test.java");
         ClassStructure cs2 = new ClassStructure();
-        cs2.setClassName("Store");
+        cs2.setClassName("Test");
         fs2.addClassStructure(cs2);
         ftp.addFileStructure(fs2);
-        */
+        
         FileStructure fs3 = new FileStructure();
         fs3.setFilePath(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\utils\\Store.java");
         fs3.setFileName("Store.java");

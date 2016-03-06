@@ -106,7 +106,7 @@ public class GlobalParams extends Thread{
     }
     
     public synchronized static boolean allThreadsDone() {
-        if (mainThreadDone==true && thread1Done==true && thread2Done==true && thread3Done==true)
+        if (mainThreadDone==true && mutexThreadMain.availablePermits()==0 && thread1Done==true && mutexThread1.availablePermits()==0 && thread2Done==true && mutexThread2.availablePermits()==0 && thread3Done==true && mutexThread3.availablePermits()==0)
             return true;
         else
             return false;

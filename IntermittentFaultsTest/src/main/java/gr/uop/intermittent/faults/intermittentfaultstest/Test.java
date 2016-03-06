@@ -198,9 +198,7 @@ public class Test {
             
             if (!exists) {
 
-                sql = "CREATE TABLE mymetrics." + table + "(ID int NOT NULL AUTO_INCREMENT,SERIAL_COUNT int(20) NOT NULL, CLASS_NAME varchar(255) NOT NULL," +
-                      " METHOD_NAME varchar(255) NOT NULL, CLASS_PATH varchar(255) NOT NULL, LINE varchar(255) NOT NULL, THREAD_NAME varchar(255) NOT NULL, RECORD_TIME DATETIME, "
-                        + "PRIMARY KEY(ID));"; 
+                sql = "CREATE TABLE mymetrics." + table + "(ID int NOT NULL AUTO_INCREMENT,SERIAL_COUNT int(20) NOT NULL, CLASS_NAME varchar(255) NOT NULL, METHOD_NAME varchar(255) NOT NULL, CLASS_PATH varchar(255) NOT NULL, LINE varchar(255) NOT NULL, THREAD_NAME varchar(255) NOT NULL, RECORD_TIME DATETIME, PRIMARY KEY(ID));"; 
                 
                 stmt.executeUpdate(sql);
             }

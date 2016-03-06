@@ -15,20 +15,22 @@ import java.util.List;
  * @author Panos
  */
 public class AddFileLines {
-    public static void addLines(File file, List<Integer> additionalLines, String className, String methodName, String classPath) throws IOException {
+    public static void addLines(File file, List<Integer> additionalLines, List<Integer> excludeLines, String className, String methodName, String classPath) throws IOException {
         List<String> lines = Files.readAllLines(file.toPath());
         classPath = classPath.replaceAll("\\\\", "\\\\\\\\");
         int i=0;
         for (int line : additionalLines) {
-            String lineString = lines.get(line-1).trim();
-            if (lines.get(line-1).length()!=0 && !lines.get(line-1).contains("return") && !lines.get(line-1).contains("if") && !lines.get(line-1).contains("while") && !lines.get(line-1).contains("*/") && lineString.compareTo("{")!=0 && lineString.compareTo("}")!=0)
-                lines.set(line-1, lines.get(line-1) + " try {JbossAutomatedJavaSeMetricsSyncDbStore.metricsDbStore(\"\", new Object[]{GlobalParams.globalCountGetAndIncrement(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\");} catch (Exception ex) {ex.printStackTrace();}");
+            if (!excludeLines.contains(line)) {
+                String lineString = lines.get(line-1).trim();
+                if (lines.get(line-1).length()!=0 && !lines.get(line-1).contains("return") && !lines.get(line-1).contains("if") && !lines.get(line-1).contains("while") && !lines.get(line-1).contains("*/") && lineString.compareTo("{")!=0 && lineString.compareTo("}")!=0)
+                    lines.set(line-1, lines.get(line-1) + " try {JbossAutomatedJavaSeMetricsSyncDbStore.metricsDbStore(\"\", new Object[]{GlobalParams.globalCountGetAndIncrement(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\");} catch (Exception ex2) {ex2.printStackTrace();}");
 
-            if (lines.get(line-1).contains("if") || lines.get(line-1).contains("while"))
-                lines.set(line-1, " try {JbossAutomatedJavaSeMetricsSyncDbStore.metricsDbStore(\"\", new Object[]{GlobalParams.globalCountGetAndIncrement(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\");} catch (Exception ex) {ex.printStackTrace();}" + lines.get(line-1));
-        
-            if (lines.get(line-1).contains("return"))
-                lines.set(line-1, " { try {JbossAutomatedJavaSeMetricsSyncDbStore.metricsDbStore(\"\", new Object[]{GlobalParams.globalCountGetAndIncrement(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\");} catch (Exception ex) {ex.printStackTrace();}" + lines.get(line-1) + "}");
+                if (lines.get(line-1).contains("if") || lines.get(line-1).contains("while"))
+                    lines.set(line-1, " try {JbossAutomatedJavaSeMetricsSyncDbStore.metricsDbStore(\"\", new Object[]{GlobalParams.globalCountGetAndIncrement(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\");} catch (Exception ex2) {ex2.printStackTrace();}" + lines.get(line-1));
+
+                if (lines.get(line-1).contains("return"))
+                    lines.set(line-1, " { try {JbossAutomatedJavaSeMetricsSyncDbStore.metricsDbStore(\"\", new Object[]{GlobalParams.globalCountGetAndIncrement(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\");} catch (Exception ex2) {ex2.printStackTrace();}" + lines.get(line-1) + "}");
+            }
         }
         Files.write(file.toPath(), lines);
     }

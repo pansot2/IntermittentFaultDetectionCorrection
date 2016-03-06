@@ -58,15 +58,33 @@ public class Main2 {
                     }
                     List<Integer> additionalLinesForReplay = new ArrayList<>();
                     
-                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("TestThreads")==0) {
-                        additionalLinesForReplay.add(107);
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("initializeMetricProperties")==0) {
+                        additionalLinesForReplay.add(172);
                     }
                     
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("run")==0) {
                         additionalLinesForReplay.add(41);
                     }
                     
-                    AddFileLinesForReplay.addLines(file, additionalLines, additionalLinesForReplay, className, methodName, filePath);
+                    List<Integer> excludeLines = new ArrayList<>();
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("replay")==0) {
+                        excludeLines.add(114);
+                    }
+                    
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("getT")==0) {
+                        excludeLines.add(68);
+                    }
+                    
+                    List<Integer> threadEndLines = new ArrayList<>();
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("run")==0) {
+                        threadEndLines.add(56);
+                    }
+                    
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("replay")==0) {
+                        threadEndLines.add(126);
+                    }
+                    
+                    AddFileLinesForReplay.addLines(file, additionalLines, additionalLinesForReplay, excludeLines, threadEndLines, className, methodName, filePath);
                 }
             }
         }
@@ -105,9 +123,9 @@ public class Main2 {
         
         FileStructure fs2 = new FileStructure();
         fs2.setFilePath(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java");
-        fs2.setFileName("Store.java");
+        fs2.setFileName("Test.java");
         ClassStructure cs2 = new ClassStructure();
-        cs2.setClassName("Store");
+        cs2.setClassName("Test");
         fs2.addClassStructure(cs2);
         ftp.addFileStructure(fs2);
         
