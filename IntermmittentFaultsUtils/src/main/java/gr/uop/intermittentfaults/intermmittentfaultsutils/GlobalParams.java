@@ -24,6 +24,41 @@ public class GlobalParams extends Thread{
     private static boolean thread3Done = true;
     
     private static volatile AtomicInteger globalCount = new AtomicInteger();
+    private static Object compareValue;
+    private static Object expectedValue;
+    private static int countUntil = -1;
+
+    public static AtomicInteger getGlobalCount() {
+        return globalCount;
+    }
+
+    public static void setGlobalCount(AtomicInteger globalCount) {
+        GlobalParams.globalCount = globalCount;
+    }
+
+    public static int getCountUntil() {
+        return countUntil;
+    }
+
+    public static void setCountUntil(int countUntil) {
+        GlobalParams.countUntil = countUntil;
+    }
+    
+    public static Object getExpectedValue() {
+        return expectedValue;
+    }
+
+    public static void setExpectedValue(Object expectedValue) {
+        GlobalParams.expectedValue = expectedValue;
+    }
+
+    public static Object getCompareValue() {
+        return compareValue;
+    }
+
+    public static void setCompareValue(Object compareValue) {
+        GlobalParams.compareValue = compareValue;
+    }
     
     public synchronized static int globalCountGetAndIncrement(){
         int count = globalCount.getAndIncrement();

@@ -16,6 +16,8 @@
  */ 
 package gr.uop.intermittent.faults.utils; 
 
+import gr.uop.intermittentfaults.intermmittentfaultsutils.GlobalParams;
+
 /**
  *
  * @author Panagiotis Sotiropoulos
@@ -26,6 +28,7 @@ public class Store {
         String name = objectName + "_" + target;
         CacheObject mo;
         mo = cacheInstance.searchObject(name);
+        GlobalParams.setCompareValue(value);      
         if (mo != null) {
             mo.addCacheObjectValue(value);
         } else {

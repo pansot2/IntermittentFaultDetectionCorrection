@@ -28,6 +28,7 @@ public class ControlThread extends Thread {
             rs = stmt.executeQuery(query);
             rs.next();
             count = rs.getInt(1);
+            GlobalParams.setCountUntil(count);
             if (count > 0) {
                 query = "SELECT * from mymetrics.metricvalues order by SERIAL_COUNT;";
                 rs = stmt.executeQuery(query);
@@ -41,7 +42,7 @@ public class ControlThread extends Thread {
     
     public void run() {
         try {
-            int recordSize = count;
+            int recordSize = GlobalParams.getCountUntil();
             int i = 0;
             
             while (i<recordSize) {
