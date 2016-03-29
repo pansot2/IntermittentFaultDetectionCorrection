@@ -23,10 +23,19 @@ public class GlobalParams extends Thread{
     private static boolean thread2Done = true;
     private static boolean thread3Done = true;
     
-    private static volatile AtomicInteger globalCount = new AtomicInteger();
+    private static volatile AtomicInteger globalCount = new AtomicInteger(0);
     private static Object compareValue;
     private static Object expectedValue;
     private static int countUntil = -1;
+    private static boolean recursive = false;
+
+    public static boolean isRecursive() {
+        return recursive;
+    }
+
+    public static void setRecursive(boolean recursive) {
+        GlobalParams.recursive = recursive;
+    }
 
     public static AtomicInteger getGlobalCount() {
         return globalCount;

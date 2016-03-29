@@ -42,7 +42,7 @@ public class Main {
             String filePath = fs.getFilePath();
             System.out.println("FilePath : " + filePath);
             File file = new File(filePath);
-            AddImport.addLines(file, "import org.jboss.metrics.javase.automatedmetricsjavaseapi.JbossAutomatedJavaSeMetricsSyncDbStore;");
+            AddImport.addLines(file, "import org.jboss.metrics.javase.automatedmetricsjavaseapi.JbossAutomatedJavaSeMetricsDbStore;");
             AddImport.addLines(file, "import gr.uop.intermittentfaults.intermmittentfaultsutils.GlobalParams;");
             
             for(ClassStructure cs : fs.getClasses()) {

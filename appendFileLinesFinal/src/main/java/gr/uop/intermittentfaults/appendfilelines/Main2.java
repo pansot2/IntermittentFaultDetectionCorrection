@@ -42,7 +42,7 @@ public class Main2 {
             String filePath = fs.getFilePath();
             System.out.println("FilePath : " + filePath);
             File file = new File(filePath);
-            AddImport.addLines(file, "import org.jboss.metrics.javase.automatedmetricsjavaseapi.JbossAutomatedJavaSeMetricsSyncDbStore;");
+            AddImport.addLines(file, "import org.jboss.metrics.javase.automatedmetricsjavaseapi.JbossAutomatedJavaSeMetricsDbStore;");
             AddImport.addLines(file, "import gr.uop.intermittentfaults.intermmittentfaultsutils.GlobalParams;");
             
             for(ClassStructure cs : fs.getClasses()) {
@@ -75,16 +75,7 @@ public class Main2 {
                         excludeLines.add(68);
                     }
                     
-                    List<Integer> threadEndLines = new ArrayList<>();
-                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("run")==0) {
-                        threadEndLines.add(56);
-                    }
-                    
-                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("replay")==0) {
-                        threadEndLines.add(126);
-                    }
-                    
-                    AddFileLinesForReplay.addLines(file, additionalLines, additionalLinesForReplay, excludeLines, threadEndLines, className, methodName, filePath);
+                    AddFileLinesForReplay.addLines(file, additionalLines, additionalLinesForReplay, excludeLines, className, methodName, filePath);
                 }
             }
         }

@@ -38,12 +38,19 @@ public class Main3 {
     public static void main(String[] args) throws IOException, InterruptedException {
         insertFilesManually();
         
+        ControlThread cThread = new ControlThread();
+        
+        int repeats = GlobalParams.getCountUntil();
+        int until = repeats/2;
+        GlobalParams.setExpectedValue(30);
+        GlobalParams.setRecursive(true);
+        
         // Add lines in the code for Replay Phase
         for(FileStructure  fs : myFS) {
             String filePath = fs.getFilePath();
             System.out.println("FilePath : " + filePath);
             File file = new File(filePath);
-            AddImport.addLines(file, "import org.jboss.metrics.javase.automatedmetricsjavaseapi.JbossAutomatedJavaSeMetricsSyncDbStore;");
+            AddImport.addLines(file, "import org.jboss.metrics.javase.automatedmetricsjavaseapi.JbossAutomatedJavaSeMetricsDbStore;");
             AddImport.addLines(file, "import gr.uop.intermittentfaults.intermmittentfaultsutils.GlobalParams;");
             
             for(ClassStructure cs : fs.getClasses()) {
@@ -76,25 +83,11 @@ public class Main3 {
                         excludeLines.add(68);
                     }
                     
-                    List<Integer> threadEndLines = new ArrayList<>();
-                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("run")==0) {
-                        threadEndLines.add(56);
-                    }
-                    
-                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("replay")==0) {
-                        threadEndLines.add(126);
-                    }
-                    
-                    AddFileLinesForRecuersiveReplay.addLines(file, additionalLines, additionalLinesForReplay, excludeLines, threadEndLines, className, methodName, filePath);
+                    AddFileLinesForRecuersiveReplay.addLines(file, additionalLines, additionalLinesForReplay, excludeLines, className, methodName, filePath);
                 }
             }
         }
-        
-        ControlThread cThread = new ControlThread();
-        
-        int repeats = GlobalParams.getCountUntil();
-        int until = repeats/2;
-        
+
         while(repeats != 1) {
             repeats=repeats/2;
             
@@ -102,7 +95,7 @@ public class Main3 {
             cThread.start();
             
             Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runCompile.bat");
-            Thread.sleep(10000);
+            Thread.sleep(10000); 
             MetricsCache cache = Test.replay(args);
 
             Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
@@ -113,8 +106,6 @@ public class Main3 {
                 } else {
                     until = until - repeats/2;
                 }
-                
-            cThread = new ControlThread();
         }
 
     }
