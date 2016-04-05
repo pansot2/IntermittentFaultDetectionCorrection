@@ -27,17 +27,18 @@ public class Store {
     public static void CacheStore(Object target, Object value, String objectName, Cache cacheInstance) throws IllegalArgumentException, IllegalAccessException, InterruptedException {
         String name = objectName + "_" + target;
         CacheObject mo;
-        mo = cacheInstance.searchObject(name);
-        GlobalParams.setCompareValue(value);      
+        mo = cacheInstance.searchObject(name);      
         if (mo != null) {
             mo.addCacheObjectValue(value);
+            GlobalParams.setCompareValue((int)GlobalParams.getCompareValue()+1); 
         } else {
           //  Thread.sleep(10);
             CacheObject newMo = new CacheObject();
             newMo.addCacheObjectValue(value); 
             newMo.setName(name);
-            cacheInstance.addCacheObject(newMo);  
-        } 
+            cacheInstance.addCacheObject(newMo); 
+            GlobalParams.setCompareValue(1);
+        }
     }
 
 }

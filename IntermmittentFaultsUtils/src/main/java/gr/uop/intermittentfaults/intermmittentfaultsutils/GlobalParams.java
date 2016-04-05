@@ -38,7 +38,7 @@ public class GlobalParams extends Thread{
     }
 
     public static AtomicInteger getGlobalCount() {
-        return globalCount;
+         return globalCount;
     }
 
     public static void setGlobalCount(AtomicInteger globalCount) {

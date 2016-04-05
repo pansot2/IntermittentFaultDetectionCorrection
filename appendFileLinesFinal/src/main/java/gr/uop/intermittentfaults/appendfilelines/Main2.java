@@ -16,6 +16,7 @@ import gr.uop.intermittentfaults.codestructure.Info;
 import gr.uop.intermittentfaults.codestructure.MethodStructure;
 import gr.uop.intermittentfaults.codestructure.Utils;
 import gr.uop.intermittentfaults.intermmittentfaultsutils.ControlThread;
+import gr.uop.intermittentfaults.intermmittentfaultsutils.GlobalParams;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,7 +90,7 @@ public class Main2 {
         
      //   Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
       //  cache = Test.replay(args);
-        
+        System.out.println("Compare Value ....... " + (int)GlobalParams.getCompareValue());
         Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
 
         /*

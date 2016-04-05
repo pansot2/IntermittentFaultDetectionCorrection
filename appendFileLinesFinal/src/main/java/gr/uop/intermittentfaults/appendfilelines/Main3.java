@@ -44,7 +44,7 @@ public class Main3 {
         int until = repeats/2;
         GlobalParams.setExpectedValue(30);
         GlobalParams.setRecursive(true);
-        
+        /*
         // Add lines in the code for Replay Phase
         for(FileStructure  fs : myFS) {
             String filePath = fs.getFilePath();
@@ -66,7 +66,7 @@ public class Main3 {
                     }
                     List<Integer> additionalLinesForReplay = new ArrayList<>();
                     
-                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("initializeMetricProperties")==0) {
+                    if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("initializeMetricPropertiesR")==0) {
                         additionalLinesForReplay.add(172);
                     }
                     
@@ -87,7 +87,7 @@ public class Main3 {
                 }
             }
         }
-
+*/
         while(repeats != 1) {
             repeats=repeats/2;
             
@@ -98,6 +98,10 @@ public class Main3 {
             Thread.sleep(10000); 
             MetricsCache cache = Test.replay(args);
 
+            System.out.println("repeats ....... " + repeats);
+            System.out.println("Until ....... " + until);
+            System.out.println("Compare Value ....... " + (int)GlobalParams.getCompareValue());
+            
             Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
 
             if (repeats>=2)

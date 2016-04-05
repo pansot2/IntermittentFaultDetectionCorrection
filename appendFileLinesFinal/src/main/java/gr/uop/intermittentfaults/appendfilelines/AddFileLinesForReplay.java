@@ -23,13 +23,14 @@ public class AddFileLinesForReplay {
         int i = 0;
         for (int line : additionalLines) {
             if (!excludeLines.contains(line)) {
-                String lineString = lines.get(line - 1).trim();
-                if (lines.get(line - 1).length() != 0 && !lines.get(line - 1).contains("return") && !lines.get(line - 1).contains("if") && !lines.get(line - 1).contains("while") && !lines.get(line - 1).contains("*/") && lineString.compareTo("{") != 0 && lineString.compareTo("}") != 0) {
-                    lines.set(line - 1, lines.get(line - 1) + " try {JbossAutomatedJavaSeMetricsDbStore.metricsDbStore(\"\", new Object[]{GlobalParams.globalCountGetAndIncrement(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsReplayGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\"); GlobalParams.SetDone(); GlobalParams.AddBlockPoints();} catch (Exception ex2) {ex2.printStackTrace();}");
-                }
+                String lineString = lines.get(line - 1).trim();  
 
                 if (lines.get(line - 1).contains("if") || lines.get(line - 1).contains("while")) {
                     lines.set(line - 1, " try {JbossAutomatedJavaSeMetricsDbStore.metricsDbStore(\"\", new Object[]{GlobalParams.globalCountGetAndIncrement(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsReplayGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\"); GlobalParams.SetDone(); GlobalParams.AddBlockPoints();} catch (Exception ex2) {ex2.printStackTrace();}" + lines.get(line - 1));
+                }
+                
+                if (lines.get(line - 1).length() != 0 && !lines.get(line - 1).contains("return") && !lines.get(line - 1).contains("if") && !lines.get(line - 1).contains("while") && !lines.get(line - 1).contains("*/") && lineString.compareTo("{") != 0 && lineString.compareTo("}") != 0) {
+                    lines.set(line - 1, lines.get(line - 1) + " try {JbossAutomatedJavaSeMetricsDbStore.metricsDbStore(\"\", new Object[]{GlobalParams.globalCountGetAndIncrement(),\"" + className + "\",\"" + methodName + "\",\"" + classPath + "\",\"" + line + "\",Thread.currentThread().getName()}, \"intermittentFaultsReplayGroup\", \"statement_1\", new String[]{\"StoreDBMetric\",\"serialCount\",\"className\",\"methodName\",\"classPath\",\"line\",\"thread\"},\"default\"); GlobalParams.SetDone(); GlobalParams.AddBlockPoints();} catch (Exception ex2) {ex2.printStackTrace();}");
                 }
 
                 if (lines.get(line - 1).contains("return")) {
