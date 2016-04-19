@@ -41,10 +41,10 @@ public class Main3 {
         ControlThread cThread = new ControlThread();
         
         int repeats = GlobalParams.getCountUntil();
-        int until = repeats/2;
+        int until = repeats;
         GlobalParams.setExpectedValue(30);
         GlobalParams.setRecursive(true);
-        /*
+        
         // Add lines in the code for Replay Phase
         for(FileStructure  fs : myFS) {
             String filePath = fs.getFilePath();
@@ -87,8 +87,8 @@ public class Main3 {
                 }
             }
         }
-*/
-        while(repeats != 1) {
+
+    //    while(repeats != 1) {
             repeats=repeats/2;
             
             GlobalParams.setCountUntil(until);
@@ -110,7 +110,7 @@ public class Main3 {
                 } else {
                     until = until - repeats/2;
                 }
-        }
+  //      }
 
     }
     
