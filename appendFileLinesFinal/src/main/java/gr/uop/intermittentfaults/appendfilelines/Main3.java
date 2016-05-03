@@ -41,6 +41,7 @@ public class Main3 {
         ControlThread cThread = new ControlThread();
         
         int repeats = GlobalParams.getCountUntil();
+        int recordSize = GlobalParams.getRecordSize();
         int until = repeats;
         GlobalParams.setExpectedValue(30);
         GlobalParams.setRecursive(true);
@@ -88,29 +89,54 @@ public class Main3 {
             }
         }
 
-    //    while(repeats != 1) {
+        Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runCompile.bat");
+            Thread.sleep(10000); 
+            
+    while(repeats != 1) {
+        boolean oddRepeats = false;
+        
+        if (repeats%2==0)
+            oddRepeats = false;
+        else
+            oddRepeats = true;
+        
             repeats=repeats/2;
             
             GlobalParams.setCountUntil(until);
+            GlobalParams.setDone(false);
+            recordSize = GlobalParams.getRecordSize();
+            
+            System.out.println("recordSize ....... " + recordSize);
+             
+                if (((int)GlobalParams.getCompareValue())==((int)GlobalParams.getExpectedValue())) {
+                    GlobalParams.setRecordSize(recordSize+repeats);
+                } else {
+                    if (oddRepeats)
+                        GlobalParams.setRecordSize(recordSize-repeats+1);
+                    else
+                        GlobalParams.setRecordSize(recordSize-repeats);
+                }
+
             cThread.start();
             
-            Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runCompile.bat");
-            Thread.sleep(10000); 
+            
             MetricsCache cache = Test.replay(args);
 
             System.out.println("repeats ....... " + repeats);
             System.out.println("Until ....... " + until);
             System.out.println("Compare Value ....... " + (int)GlobalParams.getCompareValue());
             
-            Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
-
+           
             if (repeats>=2)
                 if (((int)GlobalParams.getCompareValue())==((int)GlobalParams.getExpectedValue())) {
                     until = until + repeats/2;
                 } else {
                     until = until - repeats/2;
                 }
-  //      }
+        }
+    
+     Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");
+
 
     }
     

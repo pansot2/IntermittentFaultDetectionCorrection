@@ -17,7 +17,7 @@ import java.sql.Statement;
  */
 public class ControlThread extends Thread {
     Thread t;
-    ResultSet rs;
+    ResultSet rs, rss;
     int count;
     Statement stmt;
     
@@ -36,6 +36,13 @@ public class ControlThread extends Thread {
                  System.out.println("query = " + query);
             } else 
                 rs = null;
+            
+            query = "SELECT COUNT(*) from mymetrics.metricvalues;";
+            rss = stmt.executeQuery(query);
+            rss.next();
+            int recordSize = -1;
+            recordSize = rss.getInt(1);
+            GlobalParams.setRecordSize(recordSize);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -43,15 +50,10 @@ public class ControlThread extends Thread {
     
     public void run() {
         try {
-            int recordSize = -1;
             int i = 0;
+            int recordSize = GlobalParams.getRecordSize();
             ResultSet rss, rs0, rs1, rs2, rs3;
-            
-            String query = "SELECT COUNT(*) from mymetrics.metricvalues;";
-            rss = stmt.executeQuery(query);
-            rss.next();
-            recordSize = rss.getInt(1);
-            
+
             String query0 = "SELECT * from (SELECT * from mymetrics.metricvalues order by SERIAL_COUNT limit " + recordSize + ") as PART WHERE PART.THREAD_NAME='main' order by PART.SERIAL_COUNT DESC LIMIT 1;";
             String query1 = "SELECT * from (SELECT * from mymetrics.metricvalues order by SERIAL_COUNT limit " + recordSize + ") as PART WHERE PART.THREAD_NAME='1' order by PART.SERIAL_COUNT DESC LIMIT 1;";
             String query2 = "SELECT * from (SELECT * from mymetrics.metricvalues order by SERIAL_COUNT limit " + recordSize + ") as PART WHERE PART.THREAD_NAME='2' order by PART.SERIAL_COUNT DESC LIMIT 1;";
@@ -78,13 +80,13 @@ public class ControlThread extends Thread {
                         GlobalParams.setMainThreadDone(false);
                         GlobalParams.getMutexThreadMain().release();
                         i++;
-                        if (rs.getString("SERIAL_COUNT").compareTo(rs0.getString("SERIAL_COUNT"))==0)
+                        if (rs.getString("SERIAL_COUNT").compareTo(rs0.getString("SERIAL_COUNT"))==0 && !GlobalParams.isRecursive())
                             GlobalParams.getMutexThreadMain().release();
                         if ((i==recordSize-1) && GlobalParams.isRecursive()) {
+                            GlobalParams.setDone(true);
                             GlobalParams.getMutexThread1().release();
                             GlobalParams.getMutexThread2().release();
                             GlobalParams.getMutexThread3().release();
-                            GlobalParams.getMutexThreadMain().release();
                             GlobalParams.getMutexThreadMain().release();
                             break;
                         }
@@ -92,9 +94,10 @@ public class ControlThread extends Thread {
                         GlobalParams.setThread1Done(false);
                         GlobalParams.getMutexThread1().release();
                         i++;
-                        if (rs.getString("SERIAL_COUNT").compareTo(rs1.getString("SERIAL_COUNT"))==0)
+                        if (rs.getString("SERIAL_COUNT").compareTo(rs1.getString("SERIAL_COUNT"))==0 && !GlobalParams.isRecursive())
                             GlobalParams.getMutexThread1().release();
                         if ((i==recordSize-1) && GlobalParams.isRecursive()) {
+                            GlobalParams.setDone(true);
                             GlobalParams.getMutexThread1().release();
                             GlobalParams.getMutexThread2().release();
                             GlobalParams.getMutexThread3().release();
@@ -105,22 +108,23 @@ public class ControlThread extends Thread {
                         GlobalParams.setThread2Done(false);
                         GlobalParams.getMutexThread2().release();
                         i++;
-                        if (rs.getString("SERIAL_COUNT").compareTo(rs2.getString("SERIAL_COUNT"))==0)
+                        if (rs.getString("SERIAL_COUNT").compareTo(rs2.getString("SERIAL_COUNT"))==0 && !GlobalParams.isRecursive())
                             GlobalParams.getMutexThread2().release();
                         if ((i==recordSize-1) && GlobalParams.isRecursive()) {
+                            GlobalParams.setDone(true);
                             GlobalParams.getMutexThread1().release();
                             GlobalParams.getMutexThread2().release();
                             GlobalParams.getMutexThread3().release();
                             GlobalParams.getMutexThreadMain().release();
-                            break;
                         }
                     } else if (threadName.compareTo("3")==0) {
                         GlobalParams.setThread3Done(false);
                         GlobalParams.getMutexThread3().release();
                         i++;
-                        if (rs.getString("SERIAL_COUNT").compareTo(rs3.getString("SERIAL_COUNT"))==0)
+                        if (rs.getString("SERIAL_COUNT").compareTo(rs3.getString("SERIAL_COUNT"))==0 && !GlobalParams.isRecursive())
                             GlobalParams.getMutexThread3().release();
                         if ((i==recordSize-1) && GlobalParams.isRecursive()) {
+                            GlobalParams.setDone(true);
                             GlobalParams.getMutexThread1().release();
                             GlobalParams.getMutexThread2().release();
                             GlobalParams.getMutexThread3().release();

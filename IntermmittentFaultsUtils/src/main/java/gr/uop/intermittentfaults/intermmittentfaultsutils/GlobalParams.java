@@ -23,10 +23,13 @@ public class GlobalParams extends Thread{
     private static boolean thread3Done = true;
     
     private static volatile AtomicInteger globalCount = new AtomicInteger(0);
-    private static Object compareValue;
+    private static Object compareValue=-1;
     private static Object expectedValue;
     private static int countUntil = -1;
+    private static int recordSize = -1;
     private static boolean recursive = false;
+    private static boolean done = false;
+    
 
     public static boolean isRecursive() {
         return recursive;
@@ -34,6 +37,14 @@ public class GlobalParams extends Thread{
 
     public static void setRecursive(boolean recursive) {
         GlobalParams.recursive = recursive;
+    }
+
+    public static boolean isDone() {
+        return done;
+    }
+
+    public static void setDone(boolean done) {
+        GlobalParams.done = done;
     }
 
     public static AtomicInteger getGlobalCount() {
@@ -46,6 +57,14 @@ public class GlobalParams extends Thread{
 
     public static int getCountUntil() {
         return countUntil;
+    }
+
+    public static int getRecordSize() {
+        return recordSize;
+    }
+
+    public static void setRecordSize(int recordSize) {
+        GlobalParams.recordSize = recordSize;
     }
 
     public static void setCountUntil(int countUntil) {
