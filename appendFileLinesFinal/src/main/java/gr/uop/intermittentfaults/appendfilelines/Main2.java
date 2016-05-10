@@ -76,7 +76,7 @@ public class Main2 {
                         excludeLines.add(68);
                     }
                     
-                    AddFileLinesForRecuersiveReplay.addLines(file, additionalLines, additionalLinesForReplay, excludeLines, className, methodName, filePath);
+                    AddFileLinesForReplay.addLines(file, additionalLines, additionalLinesForReplay, excludeLines, className, methodName, filePath);
                 }
             }
         }
