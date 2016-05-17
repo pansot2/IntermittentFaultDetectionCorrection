@@ -46,6 +46,10 @@ public class CacheCollection {
         this.cacheInstances.remove(name);
     }
     
+    public synchronized void clearCacheInstance() {
+        this.cacheInstances.clear();
+    }
+    
     public synchronized boolean existsCacheInstance(String name) {
         return(this.cacheInstances.containsKey(name));
     }

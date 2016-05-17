@@ -13,11 +13,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Panos
  */
 public class GlobalParams extends Thread{
-    private static final Semaphore mutexThreadMain = new Semaphore(0);
-    private static final Semaphore mutexThread1 = new Semaphore(0);
-    private static final Semaphore mutexThread2 = new Semaphore(0);
-    private static final Semaphore mutexThread3 = new Semaphore(0);
-    private static boolean mainThreadDone;
+    private static Semaphore mutexThreadMain = new Semaphore(0);
+    private static Semaphore mutexThread1 = new Semaphore(0);
+    private static Semaphore mutexThread2 = new Semaphore(0);
+    private static Semaphore mutexThread3 = new Semaphore(0);
+    private static boolean mainThreadDone = false;
     private static boolean thread1Done = true;
     private static boolean thread2Done = true;
     private static boolean thread3Done = true;
@@ -31,6 +31,24 @@ public class GlobalParams extends Thread{
     private static boolean done = false;
     
 
+    public static void initialize() {
+        mutexThreadMain = new Semaphore(0);
+        mutexThread1 = new Semaphore(0);
+        mutexThread2 = new Semaphore(0);
+        mutexThread3 = new Semaphore(0);
+        mainThreadDone = false;
+        thread1Done = true;
+        thread2Done = true;
+        thread3Done = true;
+    
+        globalCount = new AtomicInteger(0);
+        compareValue = -1;
+        countUntil = -1;
+        recordSize = -1;
+        recursive = false;
+        done = false;
+    }
+    
     public static boolean isRecursive() {
         return recursive;
     }
@@ -87,7 +105,7 @@ public class GlobalParams extends Thread{
         GlobalParams.compareValue = compareValue;
     }
     
-    public synchronized static int globalCountGetAndIncrement(){
+    public static int globalCountGetAndIncrement(){
         int count = globalCount.getAndIncrement();
         return count;
     }
@@ -119,27 +137,27 @@ public class GlobalParams extends Thread{
             GlobalParams.setThread3Done(true);
     }
 
-    public synchronized static Semaphore getMutexThreadMain() {
+    public static Semaphore getMutexThreadMain() {
         return mutexThreadMain;
     }
 
-    public synchronized static Semaphore getMutexThread1() {
+    public static Semaphore getMutexThread1() {
         return mutexThread1;
     }
 
-    public synchronized static Semaphore getMutexThread2() {
+    public static Semaphore getMutexThread2() {
         return mutexThread2;
     }
 
-    public synchronized static Semaphore getMutexThread3() {
+    public static Semaphore getMutexThread3() {
         return mutexThread3;
     }
     
-    public synchronized static boolean isMainThreadDone() {
+    public static boolean isMainThreadDone() {
         return mainThreadDone;
     }
 
-    public synchronized static void setMainThreadDone(boolean mainThreadDone) {
+    public static void setMainThreadDone(boolean mainThreadDone) {
         GlobalParams.mainThreadDone = mainThreadDone;
     }
 
@@ -147,7 +165,7 @@ public class GlobalParams extends Thread{
         return thread1Done;
     }
 
-    public synchronized static void setThread1Done(boolean thread1Done) {
+    public static void setThread1Done(boolean thread1Done) {
         GlobalParams.thread1Done = thread1Done;
     }
 
@@ -155,7 +173,7 @@ public class GlobalParams extends Thread{
         return thread2Done;
     }
 
-    public synchronized static void setThread2Done(boolean thread2Done) {
+    public static void setThread2Done(boolean thread2Done) {
         GlobalParams.thread2Done = thread2Done;
     }
 
@@ -163,7 +181,7 @@ public class GlobalParams extends Thread{
         return thread3Done;
     }
 
-    public synchronized static void setThread3Done(boolean thread3Done) {
+    public static void setThread3Done(boolean thread3Done) {
         GlobalParams.thread3Done = thread3Done;
     }
     

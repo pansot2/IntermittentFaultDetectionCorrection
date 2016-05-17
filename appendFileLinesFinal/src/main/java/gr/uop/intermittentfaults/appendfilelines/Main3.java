@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsPropertiesApi;
 import org.jboss.metrics.jbossautomatedmetricslibrary.MetricsCache;
 
 /**
@@ -40,7 +41,7 @@ public class Main3 {
         
         ControlThread cThread = new ControlThread();
         
-        int repeats = GlobalParams.getCountUntil();
+        int repeats = GlobalParams.getRecordSize();
         int recordSize = GlobalParams.getRecordSize();
         int until = repeats;
         GlobalParams.setExpectedValue(30);
@@ -68,7 +69,7 @@ public class Main3 {
                     List<Integer> additionalLinesForReplay = new ArrayList<>();
                     
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("initializeMetricPropertiesR")==0) {
-                        additionalLinesForReplay.add(172);
+                        additionalLinesForReplay.add(176);
                     }
                     
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("run")==0) {
@@ -77,7 +78,7 @@ public class Main3 {
                     
                     List<Integer> excludeLines = new ArrayList<>();
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("replay")==0) {
-                        excludeLines.add(114);
+                        excludeLines.add(116);
                     }
                     
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("getT")==0) {
@@ -102,7 +103,6 @@ public class Main3 {
         
             repeats=repeats/2;
             
-            GlobalParams.setCountUntil(until);
             GlobalParams.setDone(false);
             recordSize = GlobalParams.getRecordSize();
             
@@ -111,10 +111,13 @@ public class Main3 {
                 if (((int)GlobalParams.getCompareValue())==((int)GlobalParams.getExpectedValue())) {
                     GlobalParams.setRecordSize(recordSize+repeats);
                 } else {
-                    if (oddRepeats)
+                    if (oddRepeats) {
                         GlobalParams.setRecordSize(recordSize-repeats+1);
-                    else
+                        recordSize = recordSize-repeats+1;
+                    } else {
                         GlobalParams.setRecordSize(recordSize-repeats);
+                        recordSize = recordSize-repeats;
+                    }
                 }
 
             cThread.start();
@@ -133,6 +136,12 @@ public class Main3 {
                 } else {
                     until = until - repeats/2;
                 }
+            cThread = new ControlThread();
+            GlobalParams.setCountUntil(until);
+            GlobalParams.initialize();
+            GlobalParams.setRecursive(true);
+            GlobalParams.setRecordSize(recordSize);
+            MetricsPropertiesApi.clearProperties();
         }
     
      Runtime.getRuntime().exec("cmd /c start C:\\Users\\Panos\\Documents\\NetBeansProjects\\appendFileLines\\src\\main\\java\\gr\\uop\\intermittentfaults\\appendfilelines\\runReset.bat");

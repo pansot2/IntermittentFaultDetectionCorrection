@@ -60,7 +60,7 @@ public class Main2 {
                     List<Integer> additionalLinesForReplay = new ArrayList<>();
                     
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("initializeMetricPropertiesR")==0) {
-                        additionalLinesForReplay.add(172);
+                        additionalLinesForReplay.add(176);
                     }
                     
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("run")==0) {
@@ -69,7 +69,7 @@ public class Main2 {
                     
                     List<Integer> excludeLines = new ArrayList<>();
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("replay")==0) {
-                        excludeLines.add(114);
+                        excludeLines.add(116);
                     }
                     
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("getT")==0) {

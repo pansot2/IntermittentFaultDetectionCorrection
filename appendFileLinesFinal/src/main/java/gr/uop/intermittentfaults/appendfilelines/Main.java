@@ -59,7 +59,7 @@ public class Main {
                     
                     List<Integer> excludeLines = new ArrayList<>();
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\Test.java")==0 && methodName.compareTo("test")==0) {
-                        excludeLines.add(86);
+                        excludeLines.add(87);
                     }
                     
                     if (filePath.compareTo(codeDirectory + "src\\main\\java\\gr\\uop\\intermittent\\faults\\intermittentfaultstest\\TestThreads.java")==0 && methodName.compareTo("getT")==0) {

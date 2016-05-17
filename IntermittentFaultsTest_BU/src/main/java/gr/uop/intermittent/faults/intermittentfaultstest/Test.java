@@ -73,6 +73,7 @@ public class Test {
     public static MetricsCache test(String[] args) {
         try {
             initializeMetricProperties();
+            CacheCollection.getCacheCollection().clearCacheInstance();
             TestClass mTC = new TestClass();
             TestThreads mTreads =  new TestThreads("1",mTC);
             mTreads.start();
@@ -101,6 +102,7 @@ public class Test {
     public static MetricsCache replay(String[] args) {
         try {
             initializeMetricPropertiesR();
+            CacheCollection.getCacheCollection().clearCacheInstance();
             TestClass mTC = new TestClass();
             TestThreads mTreads =  new TestThreads("1",mTC);
             mTreads.start();
@@ -127,6 +129,7 @@ public class Test {
     }
     
     private static void initializeMetricProperties() {
+        MetricsPropertiesApi.clearProperties();
         MetricProperties metricProperties = new MetricProperties();
         metricProperties.setCacheStore("true");
         MetricsPropertiesApi.storeProperties(groupName2, metricProperties);
@@ -150,6 +153,7 @@ public class Test {
     }
     
     private static void initializeMetricPropertiesR() {
+        MetricsPropertiesApi.clearProperties();
         MetricProperties metricProperties = new MetricProperties();
         metricProperties.setCacheStore("true");
         MetricsPropertiesApi.storeProperties(groupName2, metricProperties);
